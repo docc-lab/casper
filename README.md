@@ -12,7 +12,7 @@ We next describe the contents of this repository. They include 1) the CASPER sou
 ### Released shuffled CallGraph tables:
 We released shuffled copies of the original 2021 and 2022 datasets. The tables
 have been shuffled such that all rows for a <i>traceid</i> are contained within the
-same file. Our shuffled trace files can be found on harvard dataverse: [2021](https://doi.org/10.7910/DVN/RXIC9Z), [2022](https://doi.org/10.7910/DVN/T53HGF.
+same file. Our shuffled trace files can be found on harvard dataverse: [2021](https://doi.org/10.7910/DVN/RXIC9Z), [2022](https://doi.org/10.7910/DVN/T53HGF).
 
 ## Running CASPER
 Along with our code for CASPER, we released pre-shuffled trace files (two for 2021 and 2022). To run CASPER, you need at least one trace file, `trace_builder.py`, and `process_traces.py`.
