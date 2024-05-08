@@ -685,10 +685,9 @@ class AlibabaTraceBuilder:
             fast_calls = math.floor(rows[rows['rt'] == 0].shape[0] / 2)
             # if there's an extra 0 rt row, should pair it with a + row
             extra_fast_row = rows[rows['rt'] == 0].shape[0] % 2
-            # TODO: this is a bug -- it should be: since 0 rt rows can only be
-            # matched with a positive, they should be treated as a negative row. 
-            # slower_calls = max(int(abs(rows[rows['rt'] < 0].shape[0] - extra_fast_row)), int(rows[rows['rt'] > 0].shape[0]))
-            slower_calls = max(int(abs(rows[rows['rt'] > 0].shape[0] - extra_fast_row)), int(rows[rows['rt'] < 0].shape[0]))
+            #  0 rt rows can only be matched with a positive, so they're
+            #  treated as a negative row. 
+            slower_calls = max(int(abs(rows[rows['rt'] < 0].shape[0] - extra_fast_row)), int(rows[rows['rt'] > 0].shape[0]))
 
             return slower_calls + fast_calls
         else: 
