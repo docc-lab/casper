@@ -1,13 +1,18 @@
 # Systemizing and mitigating topological inconsistencies in Alibaba’s microservice call-graph datasets
 
 ## Overview
-Alibaba released datasets of request workflows (CallGraphs) observed in their microservice architecture in 2021 and 2022. The dataset consists of many .csv.gz files. Rows of files describe caller/callee relationships between services. A trace ID links all rows belonging to the same trace together. So, request-workflow traces (CallGraphs) can be constructed by joining together rows with the same trace ID as per Alibaba's dataset format. More information about the Alibaba datasets, including their format, can be found here: ([2021](https://github.com/alibaba/clusterdata/tree/master/cluster-trace-microservices-v2021), [2022](https://github.com/alibaba/clusterdata/tree/master/cluster-trace-microservices-v2022).  Note that a single request's data may be split among multiple .csv.gz files.  
+Alibaba released datasets of request workflows (CallGraphs) observed in their microservice architecture in 2021 and 2022. The dataset consists of many .csv.gz files. Rows of files describe caller/callee relationships between services. A trace ID links all rows belonging to the same trace together. So, request-workflow traces (CallGraphs) can be constructed by joining together rows with the same trace ID as per Alibaba's dataset format. More information about the Alibaba datasets, including their format, can be found here: ([2021](https://github.com/alibaba/clusterdata/tree/master/cluster-trace-microservices-v2021), [2022](https://github.com/alibaba/clusterdata/tree/master/cluster-trace-microservices-v2022).  Note that a single request's data may be split among multiple .csv.gz files. 
 
 In this work, we identify inconsistencies in the dataset that result in inaccurately constructed traces.  We identify the inconsistencies in our ICPE'24 paper. This repository contains the code for CASPER, (`trace_builder.py`), a trace construction technique that use redundancies in the Alibaba dataset to mitigate inconsistencies. The CASPER source code also includes support for other trace construction methods ['modes'] for comparison purposes. 
 
 Our paper introduces four rebuild modes that CASPER support: `naive-rpcid`, `naive-accurate`, `partial`, and `rebuild`. The CASPER algorithm is implemented under the `rebuild` mode. See the paper for a detailed explanation and comparison of these modes. 
 
 We next describe the contents of this repository. They include 1) the CASPER source code (`trace_builder.py` and `process_traces.py`), 2) example input files to CASPER (2021/2022-shuffled-sample-traces-small/large.csv.gz) 3) the output of CASPER that we use in our paper (*.tar.gz), and 4) a python notebook with the experiments we ran on the data (`experiments.ipynb`). Input files to CASPER must be shuffled such that rows belonging to the same trace id are in a single input file.
+
+### Released shuffled CallGraph tables:
+We released shuffled copies of the original 2021 and 2022 datasets. The tables
+have been shuffled such that all rows for a <i>traceid</i> are contained within the
+same file. Our shuffled trace files can be found on harvard dataverse: [2021](https://doi.org/10.7910/DVN/RXIC9Z), [2022](https://doi.org/10.7910/DVN/T53HGF.
 
 ## Running CASPER
 Along with our code for CASPER, we released pre-shuffled trace files (two for 2021 and 2022). To run CASPER, you need at least one trace file, `trace_builder.py`, and `process_traces.py`.
@@ -41,7 +46,7 @@ In each tarball, the reconstructed traces are stored as `.csv.gz` files. Each fi
 ### Statistics describing inconsistencies:
 In the CASPER tarball(s), the statistics describing inconsistencies are stored in the `error-stats` folder. For each `.csv.gz`, there is a corresponding `global-stats` JSON file that records the total number of traces processed, the number of traces that are unaffected by inconsistencies, and the number of traces affected by each inconsistency.
 
-Additionally, for [`rebuild`] mode, each `.csv.gz` has a corresponding `errors` JSON file. For each trace, it records metadata about the trace, the number of occurrences of different inconsistencies, and the details of each context propogation error. 
+Additionally, for [`rebuild`] mode, each `.csv.gz` has a corresponding `errors` JSON file. For each trace, it records metadata about the trace, the number of occurrences of different inconsistencies, and the details of each context propagation error. 
 
 We collect the following data for each trace:
 1. `total_num_rpcids`: total number of unique rpcids identified in the input
